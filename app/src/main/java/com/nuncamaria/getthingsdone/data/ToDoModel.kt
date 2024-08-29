@@ -16,3 +16,9 @@ enum class ToDoStatus {
     TO_DO,
     DONE,
 }
+
+fun ToDoStatus.getStatusTitle(): String = when (name) {
+    ToDoStatus.TO_DO.name -> "To do"
+    ToDoStatus.DONE.name -> "Done"
+    else -> "Empty"
+}

@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nuncamaria.getthingsdone.data.ToDoModel
 import com.nuncamaria.getthingsdone.data.ToDoStatus
+import com.nuncamaria.getthingsdone.data.getStatusTitle
 import com.nuncamaria.getthingsdone.di.AppViewModelProvider
 import com.nuncamaria.getthingsdone.domain.ToDosLinkedHashMap
 import com.nuncamaria.getthingsdone.ui.theme.Spacing
@@ -147,20 +148,23 @@ private fun ToDoItem(
             Checkbox(
                 checked = isChecked.value,
                 onCheckedChange = {
-                    //  isChecked.value = it
                     onCheckedChange(it)
                 }
             )
 
-            Column(modifier = Modifier.padding(Spacing.md)) {
+            Column(
+                modifier = Modifier.padding(Spacing.md),
+                verticalArrangement = Arrangement.spacedBy(Spacing.s)
+            ) {
                 Text(
                     text = item.title,
-                    style = Typography.headlineSmall
+                    style = Typography.bodyLarge,
+                    fontWeight = FontWeight.Bold
                 )
 
                 Text(
                     text = item.title,
-                    style = Typography.bodyMedium
+                    style = Typography.bodyLarge
                 )
             }
         }
@@ -172,7 +176,7 @@ private fun ToDoItem(
 private fun StatusTitle(status: ToDoStatus) {
     Text(
         modifier = Modifier.padding(top = Spacing.md),
-        text = status.name.lowercase(),
+        text = status.getStatusTitle(),
         style = Typography.bodyLarge,
         fontWeight = FontWeight.Bold
     )
