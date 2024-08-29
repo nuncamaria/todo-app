@@ -165,7 +165,7 @@ private fun ToDoItem(
                 )
 
                 Text(
-                    text = item.title,
+                    text = item.description,
                     style = Typography.bodyLarge
                 )
             }
@@ -175,7 +175,6 @@ private fun ToDoItem(
             }
         }
     }
-
 }
 
 @Composable
