@@ -37,7 +37,7 @@ internal fun AddToDoView(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                title = { /*TODO*/ },
+                title = { Text(text = "Add a task") },
                 navigationIcon = {
                     IconButton(onClick = navigateBack) {
                         Icon(
@@ -54,7 +54,7 @@ internal fun AddToDoView(
                 .padding(innerPadding)
                 .padding(top = Spacing.md)
                 .padding(horizontal = Spacing.md),
-            verticalArrangement = Arrangement.spacedBy(Spacing.lg)
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
 
             ToDoEntryBody(
@@ -86,9 +86,10 @@ fun ToDoEntryBody(
 
     Button(
         onClick = onSaveClick,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        enabled = toDoModelState.isEntryValid
     ) {
-        Text(text = "Save")
+        Text(text = "Add task")
     }
 }
 
@@ -97,17 +98,31 @@ fun ItemInputForm(
     item: ToDoModel,
     onValueChange: (ToDoModel) -> Unit = {},
 ) {
-    OutlinedTextField(
-        value = item.title,
-        onValueChange = {
-            onValueChange(item.copy(title = it))
-        },
-        singleLine = true
-    )
-    OutlinedTextField(
-        value = item.description,
-        onValueChange = {
-            onValueChange(item.copy(description = it))
-        }
-    )
+    Column(
+        verticalArrangement = Arrangement.spacedBy(Spacing.lg)
+    ) {
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = item.title,
+            onValueChange = {
+                onValueChange(item.copy(title = it))
+            },
+            label = { Text(text = "Title") },
+            placeholder = {
+                Text(text = "Title")
+            },
+            singleLine = true
+        )
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = item.description,
+            onValueChange = {
+                onValueChange(item.copy(description = it))
+            },
+            label = { Text(text = "Description") },
+            placeholder = {
+                Text(text = "Description")
+            },
+        )
+    }
 }
