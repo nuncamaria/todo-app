@@ -11,13 +11,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MediumTopAppBar
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -48,7 +50,7 @@ internal fun ToDoListView(
     navigateToAddToDo: () -> Unit
 ) {
 
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val toDoListUiState by viewModel.toDoList.collectAsState()
 
     Scaffold(
@@ -56,8 +58,8 @@ internal fun ToDoListView(
             .fillMaxSize()
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            MediumTopAppBar(
-                title = { Greeting("Let's get things done") },
+            LargeTopAppBar(
+                title = { Text(text = "Let's get things done") },
                 scrollBehavior = scrollBehavior
             )
         },
@@ -80,6 +82,9 @@ internal fun ToDoListView(
                 toDoList = toDoListUiState.toDoList,
                 onCheckedChange = { item, isChecked ->
                     viewModel.checkItem(item, isChecked)
+                },
+                onClickDelete = { item ->
+                    viewModel.deleteItem(item)
                 }
             )
         }
@@ -87,18 +92,10 @@ internal fun ToDoListView(
 }
 
 @Composable
-private fun Greeting(title: String, modifier: Modifier = Modifier) {
-    Text(
-        text = title,
-        style = Typography.headlineMedium,
-        modifier = modifier
-    )
-}
-
-@Composable
 private fun ToDos(
     toDoList: ToDosLinkedHashMap,
-    onCheckedChange: (ToDoModel, Boolean) -> Unit
+    onCheckedChange: (ToDoModel, Boolean) -> Unit,
+    onClickDelete: (ToDoModel) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.testTag(ToDoListId.TODO_LIST),
@@ -119,7 +116,8 @@ private fun ToDos(
                         ToDoItem(item = it,
                             onCheckedChange = { isChecked ->
                                 onCheckedChange(it, isChecked)
-                            }
+                            },
+                            onClickDelete = { onClickDelete(it) }
                         )
                     }
                 }
@@ -131,7 +129,8 @@ private fun ToDos(
 @Composable
 private fun ToDoItem(
     item: ToDoModel,
-    onCheckedChange: (Boolean) -> Unit
+    onCheckedChange: (Boolean) -> Unit,
+    onClickDelete: () -> Unit
 ) {
     val isChecked = remember { mutableStateOf(item.isDone) }
 
@@ -143,7 +142,8 @@ private fun ToDoItem(
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Checkbox(
                 checked = isChecked.value,
@@ -153,19 +153,25 @@ private fun ToDoItem(
             )
 
             Column(
-                modifier = Modifier.padding(Spacing.md),
-                verticalArrangement = Arrangement.spacedBy(Spacing.s)
+                modifier = Modifier
+                    .padding(Spacing.md)
+                    .weight(1F),
+                verticalArrangement = Arrangement.spacedBy(Spacing.xs)
             ) {
                 Text(
                     text = item.title,
                     style = Typography.bodyLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.SemiBold
                 )
 
                 Text(
                     text = item.title,
                     style = Typography.bodyLarge
                 )
+            }
+
+            IconButton(onClick = onClickDelete) {
+                Icon(imageVector = Icons.Default.Delete, contentDescription = "Remove task")
             }
         }
     }
@@ -177,8 +183,7 @@ private fun StatusTitle(status: ToDoStatus) {
     Text(
         modifier = Modifier.padding(top = Spacing.md),
         text = status.getStatusTitle(),
-        style = Typography.bodyLarge,
-        fontWeight = FontWeight.Bold
+        style = Typography.titleMedium
     )
 }
 

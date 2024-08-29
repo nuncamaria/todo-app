@@ -30,4 +30,10 @@ class ToDoListViewModel(
             repository.updateToDoItem(item.copy(isDone = isChecked))
         }
     }
+
+    fun deleteItem(item: ToDoModel) {
+        viewModelScope.launch {
+            repository.deleteToDoItem(item)
+        }
+    }
 }
