@@ -115,7 +115,7 @@ private fun ToDos(
                         StatusTitle(status)
                     }
 
-                    items(toDoList.getValue(status)) {
+                    items(list) {
                         ToDoItem(item = it,
                             onCheckedChange = { isChecked ->
                                 onCheckedChange(it, isChecked)
