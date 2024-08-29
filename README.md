@@ -9,5 +9,5 @@
 
 ### This is the first iteration of To Do App:
 
-https://github.com/user-attachments/assets/b906eeb8-ab20-4546-8a5e-f3d6c241aef9
+https://github.com/user-attachments/assets/2be457d3-97bc-460c-a2bc-bbcdbf7f77ab
 
