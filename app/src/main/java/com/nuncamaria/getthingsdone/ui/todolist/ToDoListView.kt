@@ -49,7 +49,6 @@ internal fun ToDoListView(
     viewModel: ToDoListViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navigateToAddToDo: () -> Unit
 ) {
-
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val toDoListUiState by viewModel.toDoList.collectAsState()
 
@@ -137,7 +136,11 @@ private fun ToDoItem(
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = Color.Yellow.copy(alpha = 0.3F)
+            containerColor = if (!isChecked.value) {
+                Color.Yellow.copy(alpha = 0.3F)
+            } else {
+                Color.LightGray
+            }
         )
     ) {
         Row(
@@ -148,7 +151,8 @@ private fun ToDoItem(
             Checkbox(
                 checked = isChecked.value,
                 onCheckedChange = {
-                    onCheckedChange(it)
+                    isChecked.value = it
+                    onCheckedChange(isChecked.value)
                 }
             )
 
@@ -190,6 +194,6 @@ private fun StatusTitle(status: ToDoStatus) {
 private fun EmptyMessage() {
     Text(
         modifier = Modifier.testTag(ToDoListId.EMPTY_MESSAGE),
-        text = "Seems like you don't have any To Do yet."
+        text = "Seems like you don't have any task pending!"
     )
 }
